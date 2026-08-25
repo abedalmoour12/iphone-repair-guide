@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,700;1,400&family=Reem+Kufi:wght@700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       --bg-color: #0b0f19;
@@ -52,7 +53,6 @@
       overflow: hidden;
     }
 
-    /* الشعار الصغير والاحترافي */
     .hero-image-box {
       display: flex;
       justify-content: center;
@@ -104,18 +104,19 @@
       background: rgba(16, 185, 129, 0.12);
       color: #34d399;
       border: 1px solid rgba(16, 185, 129, 0.4);
-      padding: 4px 14px;
+      padding: 5px 16px;
       border-radius: 30px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 700;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15);
     }
 
     .binance-card {
       background: rgba(245, 158, 11, 0.04);
       border: 1px dashed var(--gold);
       border-radius: 12px;
-      padding: 12px;
-      margin-top: 15px;
+      padding: 14px;
+      margin-top: 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -124,15 +125,15 @@
     .binance-title {
       color: var(--gold);
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
     .binance-id-box {
       background: #090d16;
       border: 1px solid #334155;
-      padding: 6px 18px;
+      padding: 8px 20px;
       border-radius: 8px;
       font-family: monospace;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
       color: #38bdf8;
       letter-spacing: 2px;
@@ -251,7 +252,6 @@
 
   <div class="container">
     <div class="palestine-header">
-      <!-- شعار دائري صغير أنيق -->
       <div class="hero-image-box">
         <img src="icon.png" alt="شعار التطبيق" class="hero-image" onerror="this.style.display='none'" />
       </div>
@@ -270,559 +270,6 @@
       </div>
     </div>
     
-    <input type="text" id="search-input" placeholder="🔍 ابحث عن عطل، اسم مسار، أو مكون..." />
-
-    <div id="device-buttons" class="device-buttons"></div>
-
-    <h2 id="current-device-title" style="color: #38bdf8; font-size: 1.2rem; margin-bottom: 15px;"></h2>
-
-    <div id="issues-container"></div>
-
-    <div class="footer">
-      ❤️ تم التطوير بواسطة عبد الرحمن العمور | بأيادٍ فلسطينية 🇵🇸
-    </div>
-  </div>
-
-  <script src="data_iphone11.js"></script>
-  <script src="data_iphone12.js"></script>
-  <script src="data_iphone13.js"></script>
-  <script src="data_iphone14.js"></script>
-  <script src="data_iphone15.js"></script>
-  <script src="data_iphone16.js"></script>
-  <script src="data_iphone17.js"></script>
-
-  <script>
-    const allDevices = [
-      ...((typeof iphone11_data !== 'undefined') ? iphone11_data : []),
-      ...((typeof iphone12_data !== 'undefined') ? iphone12_data : []),
-      ...((typeof iphone13_data !== 'undefined') ? iphone13_data : []),
-      ...((typeof iphone14_data !== 'undefined') ? iphone14_data : []),
-      ...((typeof iphone15_data !== 'undefined') ? iphone15_data : []),
-      ...((typeof iphone16_data !== 'undefined') ? iphone16_data : []),
-      ...((typeof iphone17_data !== 'undefined') ? iphone17_data : [])
-    ];
-
-    let selectedIndex = 0;
-
-    function initApp() {
-      const btnContainer = document.getElementById('device-buttons');
-      btnContainer.innerHTML = '';
-
-      allDevices.forEach((dev, idx) => {
-        const btn = document.createElement('button');
-        btn.className = `device-btn ${idx === selectedIndex ? 'active' : ''}`;
-        btn.innerText = dev.name.split('/')[0];
-        btn.onclick = () => {
-          selectedIndex = idx;
-          initApp();
-        };
-        btnContainer.appendChild(btn);
-      });
-
-      if (allDevices.length > 0) {
-        document.getElementById('current-device-title').innerText = `أعطال: ${allDevices[selectedIndex].name}`;
-        renderIssues(allDevices[selectedIndex].issues);
-      }
-    }
-
-    function renderIssues(issues) {
-      const container = document.getElementById('issues-container');
-      container.innerHTML = '';
-
-      if(issues.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#94a3b8;">لا توجد نتائج مطابقة للبحث</p>';
-        return;
-      }
-
-      issues.forEach(issue => {
-        let tableHTML = '';
-        if (issue.testPoints && issue.testPoints.length) {
-          tableHTML = `
-            <table>
-              <tr><th>المسار</th><th>الممانعة</th><th>الجهد</th></tr>
-              ${issue.testPoints.map(tp => `
-                <tr>
-                  <td><b style="color:#e2e8f0;">${tp.line}</b></td>
-                  <td>${tp.diode}</td>
-                  <td>${tp.volt}</td>
-                </tr>
-              `).join('')}
-            </table>
-          `;
-        }
-
-        const card = document.createElement('div');
-        card.className = 'issue-card';
-        card.innerHTML = `
-          <h3 class="issue-title">
-            <span>${issue.title}</span>
-            <span class="badge">${issue.category}</span>
-          </h3>
-          <p style="font-size:0.9rem;"><b style="color:#f59e0b;">السبب:</b> ${issue.cause}</p>
-          <ol>${issue.steps.map(s => `<li>${s}</li>`).join('')}</ol>
-          ${tableHTML}
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function copyBinanceID() {
-      const idText = document.getElementById('binance-id-text').innerText;
-      navigator.clipboard.writeText(idText).then(() => {
-        alert('تم نسخ Binance Pay ID بنجاح: ' + idText);
-      });
-    }
-
-    document.getElementById('search-input').addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      if (!allDevices[selectedIndex]) return;
-
-      const filtered = allDevices[selectedIndex].issues.filter(i => 
-        i.title.toLowerCase().includes(query) || 
-        i.cause.toLowerCase().includes(query) ||
-        (i.testPoints && i.testPoints.some(tp => tp.line.toLowerCase().includes(query)))
-      );
-      renderIssues(filtered);
-    });
-
-    document.addEventListener('DOMContentLoaded', initApp);
-  </script>
-</body>
-</html>
-      padding: 5px 16px;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15);
-    }
-
-    .binance-card {
-      background: rgba(245, 158, 11, 0.04);
-      border: 1px dashed var(--gold);
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .binance-title {
-      color: var(--gold);
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .binance-id-box {
-      background: #090d16;
-      border: 1px solid #334155;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #38bdf8;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .binance-id-box:hover {
-      border-color: #38bdf8;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>دليل صيانة الآيفون الشامل</title>
-  
-  <!-- أكواد تحويل الموقع لتطبيق (PWA) -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0b0f19">
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
-    }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,700;1,400&family=Reem+Kufi:wght@700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-color: #0b0f19;
-      --card-bg: #151d2a;
-      --accent-red: #e11d48;
-      --accent-green: #10b981;
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
-      --border: #1e293b;
-      --gold: #f59e0b;
-    }
-    body {
-      font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      margin: 0;
-      padding: 12px;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    
-    .palestine-header {
-      text-align: center;
-      background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 20px 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* حاوي الصورة الرئيسية */
-    .hero-image-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .hero-image {
-      width: 100%;
-      max-width: 280px;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-
-    .ornament-line {
-      color: var(--gold);
-      font-size: 1.1rem;
-      letter-spacing: 2px;
-      margin: 2px 0;
-      opacity: 0.85;
-    }
-
-    .palestine-title {
-      font-family: 'Reem Kufi', sans-serif;
-      font-size: 1.85rem;
-      font-weight: 900;
-      color: #ffffff;
-      margin: 4px 0;
-      letter-spacing: 1px;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.25), 0 0 30px rgba(56, 189, 248, 0.15);
-    }
-
-    .developer-name {
-      font-family: 'Amiri', serif;
-      font-size: 1.45rem;
-      font-weight: 700;
-      color: #38bdf8;
-      text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
-      margin-top: 6px;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-    }
-
-    .made-in-palestine {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(16, 185, 129, 0.12);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      padding: 5px 16px;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15);
-    }
-
-    .binance-card {
-      background: rgba(245, 158, 11, 0.04);
-      border: 1px dashed var(--gold);
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .binance-title {
-      color: var(--gold);
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .binance-id-box {
-      background: #090d16;
-      border: 1px solid #334155;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #38bdf8;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .binance-id-box:hover {
-      border-color: #38bdf8;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px 15px;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      background: var(--card-bg);
-      color: #fff;
-      font-size: 0.95rem;
-      margin-bottom: 15px;
-      box-sizing: border-box;
-      outline: none;
-      font-family: inherit;
-    }
-    input[type="text"]:focus {
-      border-color: var(--accent-green);
-    }
-    .device-buttons {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
-    .device-btn {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border: 1px solid #334155;
-      padding: 8px 16px;
-      border-radius: 20px;
-      white-space: nowrap;
-      cursor: pointer;
-      font-weight: 500;
-      font-family: inherit;
-      transition: all 0.2s;
-    }
-    .device-btn.active {
-      background: var(--accent-red);
-      border-color: #f43f5e;
-      color: #fff;
-      box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
-    }
-
-    .issue-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-right: 4px solid var(--accent-red);
-    }
-    .issue-title {
-      color: #38bdf8;
-      margin-top: 0;
-      font-size: 1.1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-    .badge {
-      background: #0369a1;
-      color: #fff;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-    }
-    ol {
-      padding-right: 18px;
-      color: #cbd5e1;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-      font-size: 0.85rem;
-      background: #0f172a;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      border: 1px solid #1e293b;
-      padding: 8px;
-      text-align: right;
-    }
-    th {
-      background: #1e293b;
-      color: var(--gold);
-    }
-    
-    .footer {
-      text-align: center;
-      margin-top: 30px;
-      padding: 15px;
-      color: var(--text-sub);
-      font-size: 0.85rem;
-      border-top: 1px solid #1e293b;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="container">
-    <div class="palestine-header">
-      <!-- استخدام الصورة المحدثة icon.png -->
-      <div class="hero-image-box">
-        <img src="icon.png" alt="مخطوطة المخ الآيفوني" class="hero-image" onerror="this.style.display='none'" />
-      </div>
-
-      <!-- العنوان المزخرف -->
-      <div class="ornament-line">❖ ── ✦ ── ❖</div>
-      <div class="palestine-title">دَلِيـلُ صِيَـانَةِ الآيْفُـونِ الشَّامِـل</div>
-      <div class="ornament-line">❖ ── ✦ ── ❖</div>
-
-      <!-- اسم المطور -->
-      <div class="developer-name">✦ المطور: عَبْـدُ الرَّحْمَـٰن العَمُـور ✦</div>
-      <div class="made-in-palestine">صُنع بأيادٍ فلسطينية 🇵🇸</div>
-
-      <!-- كرت باينانس -->
-      <div class="binance-card">
-        <div class="binance-title">🟡 لدعم تطوير المشروع عبر Binance Pay ID</div>
-        <div class="binance-id-box" onclick="copyBinanceID()" id="binance-id-text">458277161</div>
-        <small style="color: var(--text-sub); font-size: 0.75rem;">(اضغط على الرقم لنسخه)</small>
-      </div>
-    </div>
-    
-    <input type="text" id="search-input" placeholder="🔍 ابحث عن عطل، اسم مسار، أو مكون..." />
-
-    <div id="device-buttons" class="device-buttons"></div>
-
-    <h2 id="current-device-title" style="color: #38bdf8; font-size: 1.2rem; margin-bottom: 15px;"></h2>
-
-    <div id="issues-container"></div>
-
-    <div class="footer">
-      ❤️ تم التطوير بواسطة عبد الرحمن العمور | بأيادٍ فلسطينية 🇵🇸
-    </div>
-  </div>
-
-  <script src="data_iphone11.js"></script>
-  <script src="data_iphone12.js"></script>
-  <script src="data_iphone13.js"></script>
-  <script src="data_iphone14.js"></script>
-  <script src="data_iphone15.js"></script>
-  <script src="data_iphone16.js"></script>
-  <script src="data_iphone17.js"></script>
-
-  <script>
-    const allDevices = [
-      ...((typeof iphone11_data !== 'undefined') ? iphone11_data : []),
-      ...((typeof iphone12_data !== 'undefined') ? iphone12_data : []),
-      ...((typeof iphone13_data !== 'undefined') ? iphone13_data : []),
-      ...((typeof iphone14_data !== 'undefined') ? iphone14_data : []),
-      ...((typeof iphone15_data !== 'undefined') ? iphone15_data : []),
-      ...((typeof iphone16_data !== 'undefined') ? iphone16_data : []),
-      ...((typeof iphone17_data !== 'undefined') ? iphone17_data : [])
-    ];
-
-    let selectedIndex = 0;
-
-    function initApp() {
-      const btnContainer = document.getElementById('device-buttons');
-      btnContainer.innerHTML = '';
-
-      allDevices.forEach((dev, idx) => {
-        const btn = document.createElement('button');
-        btn.className = `device-btn ${idx === selectedIndex ? 'active' : ''}`;
-        btn.innerText = dev.name.split('/')[0];
-        btn.onclick = () => {
-          selectedIndex = idx;
-          initApp();
-        };
-        btnContainer.appendChild(btn);
-      });
-
-      if (allDevices.length > 0) {
-        document.getElementById('current-device-title').innerText = `أعطال: ${allDevices[selectedIndex].name}`;
-        renderIssues(allDevices[selectedIndex].issues);
-      }
-    }
-
-    function renderIssues(issues) {
-      const container = document.getElementById('issues-container');
-      container.innerHTML = '';
-
-      if(issues.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#94a3b8;">لا توجد نتائج مطابقة للبحث</p>';
-        return;
-      }
-
-      issues.forEach(issue => {
-        let tableHTML = '';
-        if (issue.testPoints && issue.testPoints.length) {
-          tableHTML = `
-            <table>
-              <tr><th>المسار</th><th>الممانعة</th><th>الجهد</th></tr>
-              ${issue.testPoints.map(tp => `
-                <tr>
-                  <td><b style="color:#e2e8f0;">${tp.line}</b></td>
-                  <td>${tp.diode}</td>
-                  <td>${tp.volt}</td>
-                </tr>
-              `).join('')}
-            </table>
-          `;
-        }
-
-        const card = document.createElement('div');
-        card.className = 'issue-card';
-        card.innerHTML = `
-          <h3 class="issue-title">
-            <span>${issue.title}</span>
-            <span class="badge">${issue.category}</span>
-          </h3>
-          <p style="font-size:0.9rem;"><b style="color:#f59e0b;">السبب:</b> ${issue.cause}</p>
-          <ol>${issue.steps.map(s => `<li>${s}</li>`).join('')}</ol>
-          ${tableHTML}
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function copyBinanceID() {
-      const idText = document.getElementById('binance-id-text').innerText;
-      navigator.clipboard.writeText(idText).then(() => {
-        alert('تم نسخ Binance Pay ID بنجاح: ' + idText);
-      });
-    }
-
-    document.getElementById('search-input').addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      if (!allDevices[selectedIndex]) return;
-
-      const filtered = allDevices[selectedIndex].issues.filter(i => 
-        i.title.toLowerCase().includes(query) || 
-        i.cause.toLowerCase().includes(query) ||
-        (i.testPoints && i.testPoints.some(tp => tp.line.toLowerCase().includes(query)))
-      );
-      renderIssues(filtered);
-    });
-
-    document.addEventListener('DOMContentLoaded', initApp);
-  </script>
-</body>
-</html>
     <input type="text" id="search-input" placeholder="🔍 ابحث عن عطل، اسم مسار، أو مكون..." />
 
     <div id="device-buttons" class="device-buttons"></div>
