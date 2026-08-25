@@ -14,6 +14,17 @@ const iphone11_data = [
         testPoints: [
           { line: "PP_DISPLAY_BL_ANODE", diode: "0.520 V", volt: "16.0V - 20.0V", notes: "خط أنود الإضاءة الرئيسي" },
           { line: "PP1V8_DISPLAY", diode: "0.410 V", volt: "1.8V", notes: "تغذية المنطق للشاشة" }
+        ],
+        // تم إضافة الصور هنا بنجاح
+        images: [
+          {
+            url: "iphone11_backlight_circuit.jpg",
+            caption: "موقع دوائر الإضاءة (يمين ويسار) تحت درع الحماية في البوردة العلوية"
+          },
+          {
+            url: "iphone11_backlight_resistors.jpg",
+            caption: "موقع مقاومات الخروج وأماكن التلف الشائعة بسبب الشورت"
+          }
         ]
       },
       {
